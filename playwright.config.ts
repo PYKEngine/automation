@@ -1,10 +1,10 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './src/tests',
+  testDir: "./src/tests",
   timeout: 60 * 1000,
   expect: {
     /**
@@ -32,14 +32,14 @@ export default defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'binance',
-      use: { ...devices['Desktop Chrome'], baseURL: process.env.APP_URL },
+      name: "binance",
+      use: { ...devices["Desktop Chrome"], baseURL: process.env.APP_URL },
     },
   ],
 });
