@@ -1,4 +1,9 @@
-import { APIRequestContext, request } from "@playwright/test";
+import {
+  APIRequestContext,
+  request,
+  expect,
+  APIResponse,
+} from "@playwright/test";
 
 class APIBinanceController {
   private api: APIRequestContext;
@@ -11,8 +16,12 @@ class APIBinanceController {
   }
 
   async getData() {
-    const res = await this.api.get("/api/v3/depth?symbol=BNBBTC&limit=1");
-    return await res.json();
+    let res: APIResponse;
+    await expect(async () => {
+      res = await this.api.get("/api/v3/depth?symbol=BNBBTC&limit=1");
+      expect(res.status()).toBe(200);
+    }).toPass();
+    return await res!.json();
   }
 }
 
