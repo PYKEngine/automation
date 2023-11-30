@@ -1,8 +1,11 @@
 import { WebSocket } from "ws";
 
-export const connectToWebSocket = (): Promise<WebSocket> => {
+import { wsQueryFormater } from "../utils";
+
+export const connectToWebSocket = (symbol: string[]): Promise<WebSocket> => {
+  const query = wsQueryFormater(symbol);
   return new Promise((resolve, reject) => {
-    const ws = new WebSocket(process.env.STREAM_URL as string);
+    const ws = new WebSocket(`${process.env.STREAM_URL}${query}`);
 
     ws.on("open", () => {
       console.log("WebSocket connection established.");

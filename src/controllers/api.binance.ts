@@ -5,9 +5,10 @@ import {
   APIResponse,
 } from "@playwright/test";
 
+import { queryBuilder } from "../utils";
+
 class APIBinanceController {
   private api: APIRequestContext;
-  buffer: any;
 
   async init() {
     this.api = await request.newContext({
@@ -15,10 +16,11 @@ class APIBinanceController {
     });
   }
 
-  async getData() {
+  async get(path: string, queryObject: object | null = null) {
+    const query = queryBuilder(queryObject);
     let res: APIResponse;
     await expect(async () => {
-      res = await this.api.get("/api/v3/depth?symbol=BNBBTC&limit=1");
+      res = await this.api.get(`${path}${query}`);
       expect(res.status()).toBe(200);
     }).toPass();
     return await res!.json();
