@@ -38,8 +38,21 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "binance-setup",
+      testMatch: /binance.setup\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: process.env.APP_URL,
+      },
+    },
+    {
       name: "binance",
-      use: { ...devices["Desktop Chrome"], baseURL: process.env.APP_URL },
+      testMatch: "src/tests/binance/*.spec.ts",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: process.env.APP_URL,
+      },
+      dependencies: ["binance-setup"],
     },
   ],
 });

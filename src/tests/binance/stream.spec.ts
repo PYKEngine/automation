@@ -1,14 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { WebSocket } from "ws";
 
-import apiBinance from "../controllers/api.binance";
-import { connectToWebSocket } from "../controllers/ws.binance";
+// Import controllers
+import apiBinance from "../../controllers/api.binance";
+import { connectToWebSocket } from "../../controllers/ws.binance";
 
+// Test parametrise
 const markets = [{ link: "BTC_USDT", symbol: "BNBBTC" }];
 
 for (const { link, symbol } of markets) {
   test.describe("Stream", () => {
-    test.only(`Check buffer for ${link}`, async ({ page }) => {
+    test(`Check buffer for ${link}`, async ({ page }) => {
       await apiBinance.init();
 
       await page.goto(`/en/trade/${link}`);
@@ -18,20 +20,15 @@ for (const { link, symbol } of markets) {
         expect(websocket.readyState, "Verify Trade Streaming connection").toBe(
           WebSocket.OPEN
         );
-        const { lastUpdateId, bids, asks } = await apiBinance.get(
-          "/api/v3/depth",
-          {
-            symbol,
-            limit: "10",
-          }
-        );
-        // console.log({ lastUpdateId, bids, asks });
+        const { lastUpdateId } = await apiBinance.get("/api/v3/depth", {
+          symbol,
+          limit: "10",
+        });
         let savedUpdate: number;
         websocket.onmessage = async (event) => {
           const data = event.data;
 
-          const { e, E, s, U, u, b, a } = JSON.parse(data as string);
-          // console.log({ e, E, s, U, u, b, a });
+          const { U, u } = JSON.parse(data as string);
           if (!savedUpdate) {
             if (u <= lastUpdateId) {
               console.log("u is <= lastUpdateId in the snapshot: drop case");

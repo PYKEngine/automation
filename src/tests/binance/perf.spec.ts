@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Performances", () => {
-  test("Get performance metrics", async ({ page, browser }) => {
+  test("Get performance metrics", async ({ page }) => {
+    // https://playwright.dev/docs/api/class-cdpsession
     //Create a new connection to an existing CDP session to enable performance Metrics
     const session = await page.context().newCDPSession(page);
     //To tell the CDPsession to record performance metrics.
@@ -10,8 +11,15 @@ test.describe("Performances", () => {
 
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Binance Spot/);
-    console.log("=============CDP Performance Metrics===============");
-    let performanceMetrics = await session.send("Performance.getMetrics");
+
+    await expect(
+      page.locator(`[id="onetrust-accept-btn-handler"]`)
+    ).toBeVisible();
+    await page.locator(`[id="onetrust-accept-btn-handler"]`).click();
+
+    console.log("============Chrome DevTools Protocol==============");
+    console.log("==============Performance Metrics================");
+    const performanceMetrics = await session.send("Performance.getMetrics");
     console.log(performanceMetrics.metrics);
   });
 
@@ -19,6 +27,7 @@ test.describe("Performances", () => {
     page,
     browser,
   }) => {
+    // https://playwright.dev/docs/api/class-browser#browser-start-tracing
     console.log("========== Start Tracing Perf ===========");
     await browser.startTracing(page, {
       path: "./perfTraces.json",
@@ -32,6 +41,11 @@ test.describe("Performances", () => {
 
     // Expect a title "to contain" a substring.
     await expect(page).toHaveTitle(/Binance Spot/);
+
+    await expect(
+      page.locator(`[id="onetrust-accept-btn-handler"]`)
+    ).toBeVisible();
+    await page.locator(`[id="onetrust-accept-btn-handler"]`).click();
 
     //Using performance.mark API
     await page.evaluate(() => window.performance.mark("Perf:Ended"));
@@ -57,11 +71,6 @@ test.describe("Performances", () => {
       'window.performance.getEntriesByType("measure")',
       getAllMeasures
     );
-
-    await expect(
-      page.locator(`[id="onetrust-accept-btn-handler"]`)
-    ).toBeVisible();
-    await page.locator(`[id="onetrust-accept-btn-handler"]`).click();
 
     console.log("======= Stop Tracing ============");
     await browser.stopTracing();

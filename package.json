@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "repository": {
+    "url": "https://github.com/PYKEngine/automation.git"
+  },
   "scripts": {
     "ci:e2e": "playwright test --project binance --headed"
   },

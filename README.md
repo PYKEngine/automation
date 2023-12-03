@@ -13,11 +13,11 @@ This test framework is based on **playwright**, to better understand all the pro
 ## Install dependencies
 
 ```bash
-npm install
+pnpm install
 npx playwright install --with-deps
 ```
 
-## Run specific test
+## Run project test
 
 ### By NPM script
 
@@ -25,16 +25,25 @@ npx playwright install --with-deps
 npx playwright test --project binance --headed
 ```
 
+You should see the following logs in your terminal
+
 ```
-Running 1 test using 1 worker
+Running 4 tests using 3 workers
 
-  ✓  1 [binance] › home.spec.ts:3:5 › has title (1.8s)
+  ✓  1 [binance-setup] › binance.setup.ts:11:8 › Setup scenario for BNBBTC (1.5s)
+Setup complete
+     2 [binance] › binance\perf.spec.ts:4:7 › Performances › Get performance metrics
+     3 [binance] › binance\perf.spec.ts:26:7 › Performances › Capture performance traces by marking actions using Performance API
+     4 [binance] › binance\stream.spec.ts:13:9 › Stream › Check buffer for BTC_USDT
+```
 
-  1 passed (3.1s)
+### Show report
 
-To open last HTML report run:
+Once tests are done, report will automaticaly display if there had at least one failure during tests.
+Otherwise, you can run the script to show them anytime.
 
-  pnpm exec playwright show-report
+```bash
+pnpm exec playwright show-report
 ```
 
 ## Project configuration
@@ -42,3 +51,5 @@ To open last HTML report run:
 There is a configuration file in the projet.
 
 - **playwright.conf.ts**
+
+See related doc: https://playwright.dev/docs/test-configuration
